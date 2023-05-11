@@ -18,7 +18,7 @@ def display_image(image):
   fig = plt.figure(figsize=(20, 15))
   plt.grid(False)
   plt.imshow(image)
-  plt.imsave("img_new.jpg", image)
+  plt.imsave("./storage/img_new.jpg", image)
 
 
 def save_image(image):
