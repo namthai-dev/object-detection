@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from . import route
 
 
 app = FastAPI()
@@ -17,3 +18,6 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"message": "Hello FastAPI"}
+
+
+app.include_router(route.router)
