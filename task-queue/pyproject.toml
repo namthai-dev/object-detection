@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "task-queue"
+version = "0.1.0"
+description = ""
+authors = ["Nam Thai <nam.thai.dev@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.10"
+celery = "^5.2.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

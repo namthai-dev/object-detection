@@ -12,6 +12,36 @@ services:
     networks:
       - vnet
 
+  rabbitmq:
+    image: rabbitmq:3.9.29
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest 
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - vnet
+
+  redis:
+    image: redis:7.2-rc-bullseye
+    restart: unless-stopped
+    command: redis-server --requirepass password
+    ports:
+     - 6379:6379
+    networks:
+     - vnet
+
+  task-queue-service:
+    build:
+      context: ./task-queue
+      dockerfile: ./Dockerfile
+    ports:
+      - 8002:8000
+    volumes:
+      - ./task-queue/src:/src
+    networks:
+      - vnet
+
 networks:
   vnet:
-    name: object-detection-network
