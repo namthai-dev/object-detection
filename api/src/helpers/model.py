@@ -1,5 +1,5 @@
 import time
-from image import load_img, draw_boxes, display_image, save_image
+from image import load_img, draw_boxes, save_image
 import tensorflow as tf
 
 
@@ -19,7 +19,5 @@ def run_detector(detector, path):
   image_with_boxes = draw_boxes(
       img.numpy(), result["detection_boxes"],
       result["detection_class_entities"], result["detection_scores"])
-
-  # display_image(image_with_boxes)
 
   save_image(image_with_boxes)
