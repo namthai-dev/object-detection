@@ -1,5 +1,5 @@
 import time
-from image import draw_boxes, save_image
+from .image import draw_boxes, save_image
 import tensorflow as tf
 
 def load_model(model_path):

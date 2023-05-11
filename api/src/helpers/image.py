@@ -21,8 +21,7 @@ def display_image(image):
   plt.imshow(image)
 
 
-def save_image(image, path, file_name):
-  file_path = os.path.join(path, file_name)
+def save_image(image, file_path):
   plt.imsave(file_path, image)
 
 

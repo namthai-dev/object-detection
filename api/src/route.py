@@ -3,7 +3,6 @@ import uuid
 from imageio import v3 as iio
 import imageio
 import io
-import os
 from .helpers.model import load_model, run_detector
 from .helpers.image import load_img 
 
@@ -20,8 +19,8 @@ async def object_detection(img: bytes = File(...)):
     # Generate id
     id = uuid.uuid4()
     # Path
-    input_path = os.path.join(storage_path, "/input", f"{id}.jpeg")
-    output_path = os.path.join(storage_path, "/output", f"{id}.jpeg")
+    input_path = storage_path + f"/input/{id}.jpeg"
+    output_path = storage_path + f"/output/{id}.jpeg"
     # Save to FS
     with open(input_path,'wb') as image:
         image.write(img)
@@ -37,7 +36,7 @@ async def object_detection(img: bytes = File(...)):
 
 @router.get("/image/{id}")
 def get_image(id: str):
-    output_path = os.path.join(storage_path, "/output", f"{id}.jpeg")
+    output_path = storage_path + f"/output/{id}.jpeg"
     im = imageio.imread(output_path)
     with io.BytesIO() as buf:
         iio.imwrite(buf, im, plugin="pillow", format="JPEG")
