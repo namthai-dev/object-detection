@@ -1476,25 +1476,6 @@ files = [
 ]
 
 [[package]]
-name = "tensorflow-hub"
-version = "0.13.0"
-description = "TensorFlow Hub is a library to foster the publication, discovery, and consumption of reusable parts of machine learning models."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "tensorflow_hub-0.13.0-py2.py3-none-any.whl", hash = "sha256:3544f4fd9fd99e4eeb6da1b5b5320e4a2dbdef7f9bb778f66f76d6790f32dd65"},
-]
-
-[package.dependencies]
-numpy = ">=1.12.0"
-protobuf = ">=3.19.6"
-
-[package.extras]
-make-image-classifier = ["keras-preprocessing[image]"]
-make-nearest-neighbour-index = ["annoy", "apache-beam"]
-
-[[package]]
 name = "tensorflow-io-gcs-filesystem"
 version = "0.32.0"
 description = "TensorFlow IO"
@@ -1715,4 +1696,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9, <3.10"
-content-hash = "2f5f3739ede31c0d67b128654b7f3cdd3b9e2dea8aa545945ad3b65b318e3665"
+content-hash = "049eb3f15b3102e3cc7c81eb92e4d600432f12dd6918d348b0b44015c74a0191"
