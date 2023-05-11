@@ -1,5 +1,5 @@
-from model import run_detector
-from image import download_and_resize_image
+import time
+from image import download_and_resize_image, load_img, draw_boxes, save_image
 import tensorflow as tf
 
 tf.config.list_physical_devices('GPU')
@@ -16,4 +16,20 @@ downloaded_image_path = download_and_resize_image(image_url, 1280, 856, True)
 module_handle = tf.saved_model.load("./models/openimages_v4_ssd_mobilenet_v2_1")
 detector = module_handle.signatures["default"]
 
-run_detector(detector, downloaded_image_path)
+img = load_img(downloaded_image_path)
+
+converted_img  = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]
+start_time = time.time()
+result = detector(converted_img)
+end_time = time.time()
+
+result = {key:value.numpy() for key,value in result.items()}
+
+print("Found %d objects." % len(result["detection_scores"]))
+print("Inference time: ", end_time-start_time)
+
+image_with_boxes = draw_boxes(
+    img.numpy(), result["detection_boxes"],
+    result["detection_class_entities"], result["detection_scores"])
+
+save_image(image_with_boxes, "./storage/output", "img_test.jpg")

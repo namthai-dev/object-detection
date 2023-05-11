@@ -1,12 +1,11 @@
 from fastapi import APIRouter, File, Response
-import tensorflow as tf
-import time
 import uuid
-from .helpers.image import draw_boxes
-import matplotlib.pyplot as plt
 from imageio import v3 as iio
 import imageio
 import io
+import os
+from .helpers.model import load_model, run_detector
+from .helpers.image import load_img 
 
 
 router = APIRouter(
@@ -14,35 +13,32 @@ router = APIRouter(
     tags=["Object detection"]
 )
 
-path = "./src/storage"
+storage_path = "./src/storage"
 
 @router.post("/")
 async def object_detection(img: bytes = File(...)):
+    # Generate id
     id = uuid.uuid4()
-    with open(f"{path}/input/{id}.jpeg",'wb') as image:
+    # Path
+    input_path = os.path.join(storage_path, "/input", f"{id}.jpeg")
+    output_path = os.path.join(storage_path, "/output", f"{id}.jpeg")
+    # Save to FS
+    with open(input_path,'wb') as image:
         image.write(img)
         image.close()
-    image = tf.io.read_file(path + f"/input/{id}.jpeg")
-    module_handle = tf.saved_model.load("./src/models/openimages_v4_ssd_mobilenet_v2_1")
-    detector = module_handle.signatures["default"]
-    image = tf.image.decode_jpeg(image, channels=3)
-    converted_img  = tf.image.convert_image_dtype(image, tf.float32)[tf.newaxis, ...]
-    start_time = time.time()
-    result = detector(converted_img)
-    end_time = time.time()
-    result = {key:value.numpy() for key,value in result.items()}
-    print("Found %d objects." % len(result["detection_scores"]))
-    print("Inference time: ", end_time-start_time)
-    image_with_boxes = draw_boxes(
-      image.numpy(), result["detection_boxes"],
-      result["detection_class_entities"], result["detection_scores"])
-    plt.imsave(f"{path}/output/{id}.jpeg", image_with_boxes)
+    # Load model
+    detector = load_model("./src/models/openimages_v4_ssd_mobilenet_v2_1")
+    # Read image
+    image = load_img(input_path)
+    # Run model
+    run_detector(detector, image, output_path)
     return id
 
 
 @router.get("/image/{id}")
 def get_image(id: str):
-    im = imageio.imread(path + "/output/" + f"{id}.jpeg") # 'im' could be an in-memory image (numpy array) instead
+    output_path = os.path.join(storage_path, "/output", f"{id}.jpeg")
+    im = imageio.imread(output_path)
     with io.BytesIO() as buf:
         iio.imwrite(buf, im, plugin="pillow", format="JPEG")
         im_bytes = buf.getvalue()

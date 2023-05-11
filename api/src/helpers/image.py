@@ -13,17 +13,17 @@ from PIL import ImageFont
 from PIL import ImageOps
 
 import tensorflow as tf
+import os
 
 def display_image(image):
-  fig = plt.figure(figsize=(20, 15))
+  plt.figure(figsize=(20, 15))
   plt.grid(False)
   plt.imshow(image)
 
 
-def save_image(image):
-  fig = plt.figure(figsize=(20, 15))
-  plt.grid(False)
-  plt.imsave("./storage/img_new.jpg", image)
+def save_image(image, path, file_name):
+  file_path = os.path.join(path, file_name)
+  plt.imsave(file_path, image)
 
 
 def download_and_resize_image(url, new_width=256, new_height=256,
