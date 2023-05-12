@@ -40,8 +40,12 @@ services:
       - 8002:8000
     volumes:
       - ./task-queue/src:/src
+    command: sh -c "celery -A src.tasks worker --loglevel=info --concurrency=1 -E --logfile=/app/celery.log"
     networks:
       - vnet
+    depends_on:
+      - rabbitmq
+      - redis
 
 networks:
   vnet:

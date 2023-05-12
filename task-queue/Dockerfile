@@ -23,5 +23,3 @@ EXPOSE 8000
 RUN --mount=type=cache,target=/root/.cache/poetry poetry install
 
 COPY ./src /src/
-
-RUN ["celery", "-A", "src.task", "worker", "--loglevel=info", "--concurrency=1", "-E", "--logfile=/app/celery.log"]
