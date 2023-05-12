@@ -20,20 +20,21 @@ function App() {
       .then(data => setTaskId(data))
   }
 
-  const getPredictedImage = () => {
-    fetch("http://localhost:8001/detect/status/" + taskId, {
-      method: "GET",
-    }).then((res) => res.json())
-      .then(data => {
-        if (data === "ok") {
-          setPredictedImage("http://localhost:8001/detect/image/" + taskId)
-          setTaskId(null)
-        } else {
-          window.setTimeout(() => getPredictedImage(), 1000)
-        }
-      })
-  }
   useEffect(() => {
+    const getPredictedImage = () => {
+      fetch("http://localhost:8001/detect/status/" + taskId, {
+        method: "GET",
+      }).then((res) => res.json())
+        .then(data => {
+          if (data === "ok") {
+            setPredictedImage("http://localhost:8001/detect/image/" + taskId)
+            setTaskId(null)
+          } else {
+            window.setTimeout(() => getPredictedImage(), 1000)
+          }
+        })
+    }
+
     if (taskId !== null) {
       getPredictedImage()
     }

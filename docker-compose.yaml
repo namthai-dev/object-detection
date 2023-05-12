@@ -1,18 +1,6 @@
 version: '3.1'
 
 services:
-  api-service:
-    build:
-      context: ./api
-      dockerfile: ./Dockerfile
-    ports:
-      - 8001:8000
-    volumes:
-      - ./api/src:/src
-      - ./storage:/storage
-    networks:
-      - vnet
-
   rabbitmq:
     image: rabbitmq:3.9.29
     ports:
@@ -33,6 +21,18 @@ services:
     networks:
      - vnet
 
+  api-service:
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    ports:
+      - 8001:8000
+    volumes:
+      - ./api/src:/src
+      - ./storage:/storage
+    networks:
+      - vnet
+
   task-queue-service:
     build:
       context: ./task-queue
@@ -48,6 +48,15 @@ services:
     depends_on:
       - rabbitmq
       - redis
+
+  client-service:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:80
+    networks:
+      - vnet
 
 networks:
   vnet:
