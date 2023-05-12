@@ -3,9 +3,8 @@ import uuid
 from imageio import v3 as iio
 import imageio
 import io
-from .helpers.model import load_model, run_detector
-from .helpers.image import load_img 
 from .helpers.storage import create_path
+from .mq_main import celery_execute, redis
 
 router = APIRouter(
     prefix="/detect",
@@ -17,23 +16,17 @@ storage_path = "./storage"
 @router.post("/")
 async def object_detection(img: bytes = File(...)):
     # Generate id
-    id = uuid.uuid4()
+    id = str(uuid.uuid4()) + ".jpg"
     # Create path
     create_path(storage_path + "/input")
-    create_path(storage_path + "/output")
     # Path
     input_path = storage_path + f"/input/{id}"
-    output_path = storage_path + f"/output/{id}"
     # Save to FS
     with open(input_path,'wb') as image:
         image.write(img)
         image.close()
-    # Load model
-    detector = load_model("./src/models/openimages_v4_ssd_mobilenet_v2_1")
-    # Read image
-    image = load_img(input_path)
-    # Run model
-    run_detector(detector, image, output_path)
+    # Send task to celery
+    celery_execute.send_task('object_detection_task', [id])
     return id
 
 
@@ -46,3 +39,9 @@ def get_image(id: str):
         iio.imwrite(buf, im, plugin="pillow", format="JPEG")
         im_bytes = buf.getvalue()
     return Response(im_bytes, media_type='image/jpeg')
+
+
+@router.get("/status/{id}")
+def get_status(id: str):
+    result = redis.get(id)
+    return result
