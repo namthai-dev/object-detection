@@ -3,7 +3,8 @@ import uuid
 from imageio import v3 as iio
 import imageio
 import io
-from .helpers.storage import create_path
+import os
+from os import path
 from .mq_main import celery_execute, redis
 
 router = APIRouter(
@@ -45,3 +46,11 @@ def get_image(id: str):
 def get_status(id: str):
     result = redis.get(id)
     return result
+
+
+
+def create_path(path_dir):
+    if path.exists(path_dir):
+        pass
+    else:
+        os.mkdir(path_dir)  
