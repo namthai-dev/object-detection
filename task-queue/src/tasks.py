@@ -36,7 +36,8 @@ class PredictTask(Task):
 )
 def object_detection_task(self, task_id: str):
     try:
-        create_path("./storage")
+        create_path("./storage/input")
+        create_path("./storage/output")
         img = load_img(f"./storage/input/{task_id}")
         image_with_boxes = self.model.detect(img)
         save_image(image_with_boxes, f"./storage/output/{task_id}")

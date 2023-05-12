@@ -5,22 +5,25 @@ import imageio
 import io
 from .helpers.model import load_model, run_detector
 from .helpers.image import load_img 
-
+from .helpers.storage import create_path
 
 router = APIRouter(
     prefix="/detect",
     tags=["Object detection"]
 )
 
-storage_path = "./src/storage"
+storage_path = "./storage"
 
 @router.post("/")
 async def object_detection(img: bytes = File(...)):
     # Generate id
     id = uuid.uuid4()
+    # Create path
+    create_path(storage_path + "/input")
+    create_path(storage_path + "/output")
     # Path
-    input_path = storage_path + f"/input/{id}.jpeg"
-    output_path = storage_path + f"/output/{id}.jpeg"
+    input_path = storage_path + f"/input/{id}"
+    output_path = storage_path + f"/output/{id}"
     # Save to FS
     with open(input_path,'wb') as image:
         image.write(img)
@@ -36,7 +39,8 @@ async def object_detection(img: bytes = File(...)):
 
 @router.get("/image/{id}")
 def get_image(id: str):
-    output_path = storage_path + f"/output/{id}.jpeg"
+    create_path(storage_path + "/output")
+    output_path = storage_path + f"/output/{id}"
     im = imageio.imread(output_path)
     with io.BytesIO() as buf:
         iio.imwrite(buf, im, plugin="pillow", format="JPEG")
