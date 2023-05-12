@@ -37,9 +37,11 @@ class PredictTask(Task):
 def object_detection_task(self, task_id: str):
     try:
         create_path("./storage")
-        img = load_img(f"./storage/{task_id}.jpg")
+        img = load_img(f"./storage/input/{task_id}")
         image_with_boxes = self.model.detect(img)
-        save_image(image_with_boxes, f"./storage/{task_id}-out.jpg")
+        save_image(image_with_boxes, f"./storage/output/{task_id}")
+        redis.set(task_id, "ok")
         return "ok"
     except:
+        redis.set(task_id, "error")
         return "error"
