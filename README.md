@@ -4,6 +4,10 @@ Ml Models in Production
 
 Serving model using asynchronous Celery tasks and FastAPI
 
+## Architecture
+
+![image](https://github.com/namthai-dev/object-detection/assets/102452878/b83582d8-363e-4f6a-89a5-ce388f43064e)
+
 ## Setup
 
 Create environment
@@ -38,6 +42,6 @@ Run API service
     
 ## Screenshots
 
-![Screenshot from 2023-05-13 00-30-06](https://github.com/namthai-dev/object-detection/assets/102452878/d7a38555-7261-4dc5-8adf-811743fc7661)
+![image](https://github.com/namthai-dev/object-detection/assets/102452878/d7a38555-7261-4dc5-8adf-811743fc7661)
 
-![Screenshot from 2023-05-13 00-30-20](https://github.com/namthai-dev/object-detection/assets/102452878/ffa4f38b-8080-4d0b-bc88-b1fb8490a317)
+![image](https://github.com/namthai-dev/object-detection/assets/102452878/ffa4f38b-8080-4d0b-bc88-b1fb8490a317)
